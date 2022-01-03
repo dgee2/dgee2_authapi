@@ -40,6 +40,12 @@ builder.Services.AddSwaggerGen(options =>
 			});
 });
 
+builder.Services.AddCors(o =>
+{
+	o.AddDefaultPolicy(
+		builder => builder.WithOrigins("http://localhost:8080").AllowAnyHeader());
+});
+
 builder.Services.Configure<JwtConfig>(builder.Configuration.GetRequiredSection(JwtConfig.ConfigName));
 
 builder.Services.AddTransient<JwtHelpers>();
@@ -75,6 +81,7 @@ if (app.Environment.IsDevelopment())
 	app.UseSwagger();
 	app.UseSwaggerUI(o =>
 	{
+		o.SwaggerEndpoint("v1/swagger.yaml", "dgee2_authapi V1");
 		o.DisplayRequestDuration();
 		o.EnableTryItOutByDefault();
 	});
@@ -82,6 +89,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseAuthentication().UseAuthorization();
+
+app.UseCors();
 
 app.MapPost("/auth/generate-token", (JwtHelpers jwt) =>
 {
