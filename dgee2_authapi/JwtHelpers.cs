@@ -21,7 +21,7 @@ namespace dgee2_authapi
 		public AuthResponse GenerateTokens(int userId, string email, string username)
 		{
 			var (accessToken, accessExpires) = GenerateAccessToken(userId, email, username);
-			var (refreshToken, refreshExpires) = GenerateRefreshToken(userId, email, username);
+			var (refreshToken, refreshExpires) = GenerateRefreshToken(userId);
 			return new AuthResponse(accessToken, accessExpires, refreshToken, refreshExpires);
 		}
 
@@ -31,9 +31,9 @@ namespace dgee2_authapi
 			return GenerateToken(primaryKey, claims);
 		}
 
-		public (string Token, DateTime Expires) GenerateRefreshToken(int userId, string email, string username)
+		public (string Token, DateTime Expires) GenerateRefreshToken(int userId)
 		{
-			var claims = new[] { new Claim("userid", userId.ToString()), new Claim("email", email), new Claim("username", username) };
+			var claims = new[] { new Claim("userid", userId.ToString()) };
 			return GenerateToken(refreshKey, claims);
 		}
 
